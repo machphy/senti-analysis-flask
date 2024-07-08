@@ -10,18 +10,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import joblib
 
-# Download the dataset
+# Downloaddataset
 nltk.download('movie_reviews')
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# Load the dataset
+# Load dataset
 documents = [(list(movie_reviews.words(fileid)), category)
              for category in movie_reviews.categories()
              for fileid in movie_reviews.fileids(category)]
 random.shuffle(documents)
 
-# Preprocess the data
+# Preprocess 
 stopwords = nltk.corpus.stopwords.words('english')
 def preprocess(document):
     words = [w.lower() for w in document if w.isalpha()]
@@ -31,19 +31,19 @@ def preprocess(document):
 documents = [(preprocess(doc), category) for doc, category in documents]
 data = pd.DataFrame(documents, columns=['text', 'sentiment'])
 
-# Split the data
+# Split 
 X_train, X_test, y_train, y_test = train_test_split(data['text'], data['sentiment'], test_size=0.2, random_state=42)
 
 # Create a pipeline with TF-IDF and Naive Bayes
 model = make_pipeline(TfidfVectorizer(), MultinomialNB())
 
-# Train the model
+# Train model
 model.fit(X_train, y_train)
 
-# Evaluate the model
+# Evaluate  model
 predicted = model.predict(X_test)
 accuracy = accuracy_score(y_test, predicted)
 print(f"Accuracy: {accuracy}")
 
-# Save the model
+# Sav model
 joblib.dump(model, 'sentiment_model.pkl')
